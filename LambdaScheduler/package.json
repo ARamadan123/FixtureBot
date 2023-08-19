@@ -1,0 +1,17 @@
+{
+  "name": "lambdascheduler",
+  "version": "1.0.0",
+  "description": "Code for Lambda which retursn schedules",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abdelrahman Ramadan",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-scheduler": "^3.391.0",
+    "luxon": "^3.4.0",
+    "node-fetch": "^3.3.2"
+  }
+}
