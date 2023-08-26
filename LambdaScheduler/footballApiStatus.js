@@ -26,7 +26,7 @@ const footballApiStatus = async () => {
 
             // check if subscription is active and day limit hasn't been met
             if((data["response"]["subscription"]["active"] == true) && (
-                data["response"]["requests"]["current"] < 50
+                data["response"]["requests"]["current"] < 75
             )) {
                 STATUS_CODE = 200;
             }

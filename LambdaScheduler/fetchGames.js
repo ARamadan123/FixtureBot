@@ -8,17 +8,17 @@ const fetchGames = async () => {
     const season = 2023;
     // Get Today's Date
     const date2 = "2023-08-19" // changes date in PROD
-    const date = DateTime.now().setZone('America/New_York').toString().slice(0,10);
+    const date = DateTime.now().setZone('America/New_York').plus({day:1}).toString().slice(0,10);
     const timeZone = "America/New_York"
     let numberOfGames = 0
-    let STATUS_CODE = 400;
+
     let returnValue = {
-        "STATUS_CODE" : STATUS_CODE,
+        "STATUS_CODE" : 400,
     };
 
     
     const fixtureUrl = `https://v3.football.api-sports.io/fixtures?
-    league=${leagueId}&season=${season}&date=${date2}&timezone=${timeZone}`;
+    league=${leagueId}&season=${season}&date=${date}&timezone=${timeZone}`;
     
     let myHeaders = new Headers();
     myHeaders.append("x-rapidapi-key", process.env.API_KEY);
@@ -33,10 +33,10 @@ const fetchGames = async () => {
         const response = await fetch(fixtureUrl, requestOptions)
         data = await response.json();
         numberOfGames = data["response"].length
-        STATUS_CODE = 200;
+        returnValue["STATUS_CODE"] = 200
     }
     catch (err){
-        STATUS_CODE = 400;
+        returnValue["STATUS_CODE"] = 400
         return returnValue
     }
 
@@ -45,7 +45,8 @@ const fetchGames = async () => {
     for (let i = 0; i < numberOfGames; i++) {
         event["counter"] = i;
         event["fixtureId"] = data["response"][i]["fixture"]["id"];
-        event["time"] = data["response"][i]["fixture"]["date"].slice(0,19);
+        event["time"] = DateTime.fromFormat(data["response"][i]["fixture"]["date"].slice(0,19)
+        ,'yyyy-MM-dd\'T\'HH:mm:ss').minus({minutes:20}).toString().slice(0,19)
         event["description"] = data["response"][i]["teams"]["home"]["name"] + " vs " + data["response"][i]["teams"]["away"]["name"];
         let code = await createSchedule(event);
         if (code == 400) {
